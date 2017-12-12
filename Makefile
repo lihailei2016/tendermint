@@ -11,8 +11,11 @@ BUILD_FLAGS = -ldflags "-X github.com/tendermint/tendermint/version.GitCommit=`g
 
 all: get_vendor_deps install test
 
-install:
+install: install_precondition.stamp
 	go install $(BUILD_FLAGS) ./cmd/tendermint
+
+install_precondition.stamp:
+	(which gometalinter.v2 || make tools)
 
 build:
 	go build $(BUILD_FLAGS) -o build/tendermint ./cmd/tendermint/
@@ -119,4 +122,4 @@ metalinter_test:
 		#--enable=vet \
 		#--enable=vetshadow \
 
-.PHONY: install build build_race dist test test_race test_integrations test100 draw_deps list_deps get_deps get_vendor_deps update_deps update_tools tools test_release
+.PHONY: install build build_race dist test test_race test_integrations test100 draw_deps list_deps get_deps get_vendor_deps update_deps update_tools tools test_release install_precondition.stamp
